@@ -462,12 +462,12 @@ def read_intraday(data, symbol, history, since):
         return frame_result([], 0, None, since, "missing", empty), []
     envelope = raw["chart"]
     if envelope.get("error") or not envelope.get("result"):
-        raise ValueError("五分鐘行情缺少有效回應。")
+        raise ValueError("五分鐘走勢缺少有效回應。")
     chart = envelope["result"][0]
     meta = chart["meta"]
     if (meta.get("symbol", "").upper() != symbol or meta.get("dataGranularity") != "5m"
             or meta.get("exchangeTimezoneName") != data["timezone"] or meta.get("instrumentType") != "INDEX"):
-        raise ValueError("五分鐘行情的現貨指數、周期或市場時區不符。")
+        raise ValueError("五分鐘走勢的現貨指數、周期或市場時區不符。")
     zone = ZoneInfo(data["timezone"])
     clock = dt.datetime.fromisoformat(data["as_of_utc"]).timestamp()
     ticks = sorted(t for t in chart.get("timestamp", []) if isinstance(
@@ -579,9 +579,9 @@ def completed_index_history(data, symbol):
         raise ValueError("形態追蹤只適用於四個指定現貨指數。")
     zone = "Asia/Hong_Kong" if symbol == "^HSI" else "America/New_York"
     if data["timezone"] != zone or data["meta"].get("symbol") != symbol:
-        raise ValueError("現貨指數代號或市場時區與行情不符。")
+        raise ValueError("現貨指數代號或市場時區與走勢不符。")
     if data["meta"].get("instrumentType") not in (None, "INDEX"):
-        raise ValueError("行情並非指定現貨指數。")
+        raise ValueError("走勢並非指定現貨指數。")
     history = data.get("reaction_history") or data["completed"]
     history = [b for b in history if b.get("complete", True)]
     if not history:
@@ -604,8 +604,8 @@ def track_index(data, symbol, history_days=30):
         minute, overlay = read_intraday(data, symbol, history, since)
     except (ValueError, KeyError, TypeError, IndexError, OverflowError, OSError) as error:
         if data.get("intraday_explicit"):
-            raise ValueError("指定的五分鐘行情無法核對。"+str(error)) from error
-        note = "五分鐘行情無法核對。"+str(error)
+            raise ValueError("指定的五分鐘走勢無法核對。"+str(error)) from error
+        note = "五分鐘走勢無法核對。"+str(error)
         minute, overlay = frame_result([], 0, None, since, "missing", {}), []
     live_daily_observations(daily, overlay)
     return dict(symbol=symbol, name=INDICES[symbol], timezone=data["timezone"], as_of_utc=data["as_of_utc"],

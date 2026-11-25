@@ -24,7 +24,7 @@ def chart_data(data, symbol, bars, start, end, supplement=None):
     page = "https://finance.yahoo.com/quote/%5E" + symbol.lstrip("^") + "/"
     quote = dict(kind="close", at=last["date"], value=last["close"], source="Yahoo Finance", url=page)
     if data["meta"].get("synthetic"):
-        quote.update(source="合成測試行情", url=None)
+        quote.update(source="合成測試走勢", url=None)
         return dict(bars=candles, quote=quote)
 
     tz = ZoneInfo(data["timezone"])
@@ -158,7 +158,7 @@ def trading_plot(candles, quote, zones):
         side = "first" if idx == 0 else "end" if idx == n-1 else "mid"
         ticks.append(f'<time class="{side}" style="left:{100*x(idx)/width:.3f}%" datetime="{d.isoformat()}">{d.month}/{d.day}</time>')
     return (f'<div class="chart-grid" style="--plot-height:{height}px"><div class="chart-axis" aria-hidden="true">'
-            + ''.join(axis) + f'</div><div class="chart-field" tabindex="0" role="group" aria-label="逐日陰陽燭，可用左右方向鍵讀取行情">'
+            + ''.join(axis) + f'</div><div class="chart-field" tabindex="0" role="group" aria-label="逐日陰陽燭，可用左右方向鍵讀取走勢">'
             f'<svg class="candle-plot" role="img" aria-label="天線陰陽燭、已確認價區與報價位置" '
             f'viewBox="0 0 {width} {height}" preserveAspectRatio="none">' + ''.join(shapes) + '</svg>'
             f'<i aria-hidden="true" class="quote-diamond" style="top:{quote_y/height*100:.4f}%;left:{quote_x/width*100:.4f}%"></i></div>'

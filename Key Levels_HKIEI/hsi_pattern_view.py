@@ -50,7 +50,7 @@ def opportunity_rows(stats):
 def plan_rows(profile):
     plan = profile["next_plan"]
     if not plan:
-        return [("支持及阻力","暫缺事前行情")]
+        return [("支持及阻力","暫缺事前走勢")]
     live = profile.get("latest_session")
     on_open = live is not None and not live["complete"]
     out = []
@@ -69,9 +69,9 @@ def plan_rows(profile):
             value += " · 失效邊界 %s 點" % format(c["invalidation"],",.1f")
         out.append((DIRECTIONS[side],value))
     if not plan["hourly_ready"]:
-        out.append(("一小時行情","近 20 個交易日取得 %d 個完整時段，未足 15 日。" % plan["hourly_days"]))
+        out.append(("一小時走勢","近 20 個交易日取得 %d 個完整時段，未足 15 日。" % plan["hourly_days"]))
     if not plan["weekly_ready"]:
-        out.append(("週線行情","取得 %d 根已完成週線，未足 52 根。" % plan["weekly_bars"]))
+        out.append(("週線走勢","取得 %d 根已完成週線，未足 52 根。" % plan["weekly_bars"]))
     return out
 
 
@@ -99,7 +99,7 @@ def html_section(profile, table):
             + escape(PLAN_RULE)+'</p><h3>'+('按 '+escape(p["as_of"])+' 收市劃位' if p else '價位觀察')+'</h3><ul>'+plans
             +'</ul><h3>'+escape(interval)+'</h3><p>'+escape(RULE)+'</p>'+table(HEADERS,list(rates(stats)))
             +table(FLOW_HEADERS,list(opportunity_rows(stats)))
-            +'<p>兩邊均觀望 %d / %d 日。期內一小時行情有 %d 日達到歷史要求，週線行情有 %d 日。'
+            +'<p>兩邊均觀望 %d / %d 日。期內一小時走勢有 %d 日達到歷史要求，週線走勢有 %d 日。'
              '每個交易日、每個方向只取一次。可評觸及為零時顯示「無可評樣本」。</p>' %
             (stats["combined"]["abstain_days"],len(dates),profile["hourly_ready_days"],profile["weekly_ready_days"])
             +'<details><summary>按支持與阻力查看</summary>'+table(HEADERS,list(rates(stats,True)))+'</details>'

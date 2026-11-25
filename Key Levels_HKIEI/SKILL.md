@@ -5,6 +5,8 @@ description: Find nearby support and resistance levels (key levels) for a stock,
 
 # Key Levels_HKIEI（支持位／阻力位）
 
+對外顯示名稱統一使用「Key Levels_HKIEI」。不要在報告、檔名或回覆加入本工具的版本號。`key-levels` 只用於安裝及指令的技術識別。
+
 以 Yahoo Finance 日線劃出收市時可知的支持及阻力，並以五分鐘圖走勢量度首次觸及後的反應。腳本使用 Python 3.9+ 標準庫，預設輸出可離線閱讀的 HTML、股價圖及報告卡。
 
 ## 恒指及美國三大指數的支持位及阻力位

@@ -1,4 +1,4 @@
-Key Levels_HKIEI v2.2.3
+Key Levels_HKIEI
 投創教育 HKIEI
 
 用途
@@ -16,9 +16,9 @@ ChatGPT
 使用已安裝的「Key Levels_HKIEI」。這個 ZIP 不會自行替帳戶安裝插件。
 
 Claude 安裝
-1. 解壓 Key Levels_HKIEI.zip，保留整個 key-levels 資料夾。
+1. 解壓 Key Levels_HKIEI.zip，保留整個 Key Levels_HKIEI 資料夾。
 2. 在可讀取本機檔案的 Claude 環境輸入：
-   請把「下載」資料夾內的 key-levels 資料夾安裝到 ~/.claude/skills/key-levels/，並確認 SKILL.md、track_indices.py 及 assets 資料夾均存在。
+   請把「下載」資料夾內的 Key Levels_HKIEI 資料夾安裝到 ~/.claude/skills/key-levels/，並確認 SKILL.md、track_indices.py 及 assets 資料夾均存在。
 3. 完成後開啟新對話，輸入以下使用例子。
 
 使用例子
@@ -29,13 +29,14 @@ Claude 安裝
 檔案說明
 - SKILL.md：讓 AI 知道何時及如何執行分析。
 - README.txt：本安裝及使用說明。
+- agents/openai.yaml：顯示名稱設定，讓支援的介面顯示 Key Levels_HKIEI。
 - 12 個 Python 程式：走勢處理、價區計算、事件追蹤、歷史統計及報告輸出，彼此有相依關係。
 - assets 內 7 個檔案：報告樣式、圖表互動、圖片轉換及 HKIEI 標誌。
 請保留整個資料夾，不要只取出 SKILL.md；亦不要刪除 assets 或個別 Python 程式。
 
 資料及使用限制
 走勢來自 Yahoo Finance 公開來源，可能延遲、缺漏或無法連線。沒有足夠資料時，應保留報告的限制說明，不可自行補作價位。
-此版本是本機執行的原始碼套件，並非加密或伺服器託管服務。
+本套件是本機執行的原始碼套件，並非加密或伺服器託管服務。
 
 A.I. 生成聲明
 報告及當中重要價位由 A.I. 根據公開走勢自動計算及生成，未經人工逐一核實，或有錯誤或延遲。

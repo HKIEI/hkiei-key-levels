@@ -1,4 +1,4 @@
-"""Self-contained HTML presentation for Key Levels (standard library only).
+"""Self-contained HTML presentation for Key Levels_HKIEI (standard library only).
 
 Receives computed levels from key_levels.py. No prices are fetched here and no
 level selection, score, reaction count or backtest is calculated by this module.
@@ -57,10 +57,10 @@ def hsi_section(profile, table):
               '點數及上日 ATR 倍數各自取中位數。</p>'
             + '<details><summary>恒指支持與阻力的表現</summary>' + table(columns, metric_rows(profile["stats"], split=True))
             + '</details><details><summary>核對上日樞軸的區間及開市選擇</summary>'
-            + (''.join(plans) or '<p>事前行情不足，暫無可核對的位置。</p>')
+            + (''.join(plans) or '<p>事前走勢不足，暫無可核對的位置。</p>')
             + '</details><details><summary>只看恒指規則定稿後的新交易日</summary><p>'
             + esc(profile["rules_fixed_on"]) + ' 定稿。本次區間共有 %d 個其後已收市交易日。' % forward["days"]
-            + '按較早行情逐日重建。</p>' + future + '</details>')
+            + '按較早走勢逐日重建。</p>' + future + '</details>')
 
 
 def reaction_section(watch):
@@ -74,7 +74,7 @@ def reaction_section(watch):
                           for label, status in entries)
         plans.append('<div class="reference-card"><h3>' + esc(heading) + "</h3><ul>" + content + "</ul></div>")
     if not plans:
-        plans.append('<p>可用事前行情少於 250 個交易日，暫無可核對的回試位置。</p>')
+        plans.append('<p>可用事前走勢少於 250 個交易日，暫無可核對的回試位置。</p>')
 
     def table(headers, rows):
         titles = "".join('<th scope="col">' + esc(h) + "</th>" for h in headers)
@@ -116,7 +116,7 @@ def reaction_section(watch):
                 '<p>由觸及後下一支五分鐘燭的開市價起計。支持向上、阻力向下為順向。'
                 '連續觀察十二支完整五分鐘燭。兩邊未到或同燭先後不明均計入分母。</p>'
                 + hour_table(hourly["scores"])
-                + '<p class="small muted">可重建的 %d 日之中，%d 日有完整五分鐘行情。未列入一小時分母的情況按日及方向計算，包括%s。</p>'
+                + '<p class="small muted">可重建的 %d 日之中，%d 日有完整五分鐘走勢。未列入一小時分母的情況按日及方向計算，包括%s。</p>'
                 % (hourly["requested_sessions"], hourly["full_sessions"], esc(excluded))
                 + '<details><summary>按支持、阻力及事前波幅查看一小時結果</summary>'
                 + table(h_cols, [hour_row(label+" · "+direction, hourly["scores"][key][side])
@@ -133,7 +133,7 @@ def reaction_section(watch):
                     daily_row(label, watch["selected_by_regime"][key]["both"]) for key, label in REGIMES])
                 + '<p>跌穿支持採用全日最低價低於區底，升穿阻力採用全日最高價高於區頂。剛好到邊界只計觸及。</p></details>'
                 + '<details><summary>規則定稿後的新交易日</summary><p>定稿日為 ' + esc(watch["rules_fixed_on"])
-                + '。本次區間有 %d 個交易日在定稿日之後，只按當時已知的較早行情逐日重建。</p>' % forward["days"]
+                + '。本次區間有 %d 個交易日在定稿日之後，只按當時已知的較早走勢逐日重建。</p>' % forward["days"]
                 + future_content + '</details>')
     introduction = ('上日收市固定兩層支持及阻力。每邊先看第一層，只有開市已不合資格才啟用合資格的後備第二層。'
                     '全日沿用該邊的開市選擇。' if hourly else '上日收市固定最近支持 1 及阻力 1。')
@@ -155,7 +155,7 @@ def reaction_section(watch):
         + '<p class="small muted">較高波幅指上日 ATR 佔收市價的百分比高於此前 60 個交易日的中位數。兩組均計入總成績。</p>'
         + '<p class="stat-note">實際觸及後，支持要收在區頂以上，阻力要收在區底以下，才計作收回原側。'
           '第二項另要求收市順向距離達半個上日 ATR。每日每邊最多一次。'
-          '這張第一層對照表的歷史行情重建只衡量收市反應。表內比例屬歷史結果。</p></details></section>'
+          '這張第一層對照表的歷史走勢重建只衡量收市反應。表內比例屬歷史結果。</p></details></section>'
     )
 
 
@@ -177,10 +177,10 @@ def render_report(r, bars, days, copy):
     banner = ""
     if source.get("synthetic"):
         mode = "合成數據測試"
-        banner = '<div class="status caution" role="note"><b>合成測試數據</b> · 非真實行情，不可作市況分析。</div>'
+        banner = '<div class="status caution" role="note"><b>合成測試數據</b> · 非真實走勢，不可作市況分析。</div>'
     elif source.get("input_file"):
         mode = "歷史快照報告"
-        banner = '<div class="status caution" role="note"><b>離線歷史快照</b> · 此報告使用已保存的行情，不代表最新市況。</div>'
+        banner = '<div class="status caution" role="note"><b>離線歷史快照</b> · 此報告使用已保存的走勢，不代表最新市況。</div>'
     quote_note = ("Yahoo 一般交易時段報價；可能有延遲，不包括盤前及盤後交易。"
                   if "regularMarketPrice" in price["kind"] else "採用最新交易日收市價，並非即時價。")
 
@@ -255,7 +255,7 @@ def render_report(r, bars, days, copy):
     warnings = list(dict.fromkeys(r["warnings"] + r["interpretation"]["limitations"]))
     ranking = ''.join('<tr><th scope="row">' + esc(copy["names"][z["id"]]) + '</th><td>' + esc(z["id"])
                       + '</td><td>' + fmt(z["statistical_score"]) + '</td></tr>' for z in resistances + supports)
-    advanced = (f'<dl class="meta-grid"><dt>計算版本</dt><dd>Key Levels {esc(r["schema_version"])}</dd>'
+    advanced = (f'<dl class="meta-grid"><dt>分析工具</dt><dd>Key Levels_HKIEI</dd>'
                 f'<dt>資料來源</dt><dd>{esc(source.get("provider", "Yahoo Finance chart API"))}</dd>'
                 f'<dt>市場時區</dt><dd>{esc(r["timezone"])}</dd>'
                 f'<dt>報告計算時間（UTC）</dt><dd>{esc(r["as_of_utc"])}</dd>'
@@ -287,7 +287,7 @@ def render_report(r, bars, days, copy):
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>{esc(page_title)}</title><style>{css}</style></head><body>
-<header><div class="wrap"><div class="brandrow">{brand_image}<span>KEY LEVELS <span class="brand-divider">/</span> {esc(mode)}</span><button id="print" class="print-button" type="button">列印 / 儲存 PDF</button></div>
+<header><div class="wrap"><div class="brandrow">{brand_image}<span>Key Levels_HKIEI <span class="brand-divider">/</span> {esc(mode)}</span><button id="print" class="print-button" type="button">列印 / 儲存 PDF</button></div>
 <div class="eyebrow">SUPPORT &amp; RESISTANCE</div><h1>{esc(r["symbol"])} <span>支持位與阻力位</span></h1>
 <p class="instrument">{esc(r["instrument_name"])}</p><div class="header-meta"><span>報價時間 · {esc(quote_time)}</span><span>{esc(r["timezone"])}</span><span>A.I. 計算及生成</span></div></div></header>
 <main class="wrap">{banner}{tracker_html}
@@ -311,5 +311,5 @@ def render_report(r, bars, days, copy):
 <div class="limitations"><h3>資料限制</h3>{list_html(warnings)}</div>
 <details><summary>進階資料與計算設定</summary>{advanced}</details></section>
 <footer><div class="ai-notice"><b>A.I. 生成聲明</b><p>{esc(copy["ai_notice"])}</p></div><div class="disclaimer">{esc(copy["disclaimer"])}</div>
-<div class="footer-line"><span>投創教育 HKIEI · KEY LEVELS {esc(r["schema_version"])}</span><span>單一 HTML 檔 · 可離線閱讀</span></div></footer>
+<div class="footer-line"><span>投創教育 HKIEI · Key Levels_HKIEI</span><span>單一 HTML 檔 · 可離線閱讀</span></div></footer>
 </main><script id="chart-data" type="application/json">{safe_json(chart_data)}</script><script>{script}</script></body></html>'''

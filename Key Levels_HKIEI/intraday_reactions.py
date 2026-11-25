@@ -11,8 +11,8 @@ WINDOW = 12
 OUTCOMES = ("favourable", "adverse", "timeout", "ambiguous")
 LABELS = {
     "favourable": "先順向", "adverse": "先逆向", "timeout": "兩邊未到", "ambiguous": "同燭先後不明",
-    "not_selected": "開市沒有合資格位置", "missing_session": "欠完整五分鐘行情",
-    "opening_disagreement": "兩種行情的開市方向不一致", "jumped_past_first": "首次觸及前跳過整區",
+    "not_selected": "開市沒有合資格位置", "missing_session": "欠完整五分鐘走勢",
+    "opening_disagreement": "兩種走勢的開市方向不一致", "jumped_past_first": "首次觸及前跳過整區",
     "short_window": "午休或收市前不足一小時", "no_observed_touch": "未見觸及",
     "invalid_atr": "上日波幅無法評分", "pending": "交易日進行中", "unsupported_session": "未能核實連續交易時段",
 }
@@ -74,22 +74,22 @@ def read_sessions(payload, symbol, tz_name, dates, cutoff):
         return sessions
     chart = payload["chart"]
     if chart.get("error") or not chart.get("result"):
-        raise ValueError("五分鐘行情缺少有效回應。")
+        raise ValueError("五分鐘走勢缺少有效回應。")
     result = chart["result"][0]
     meta = result["meta"]
     if meta.get("symbol", "").upper() != symbol or meta.get("dataGranularity") != "5m":
-        raise ValueError("五分鐘行情的代號或時間間距不符。")
+        raise ValueError("五分鐘走勢的代號或時間間距不符。")
     if meta.get("exchangeTimezoneName") != tz_name:
-        raise ValueError("五分鐘行情的市場時區不符。")
+        raise ValueError("五分鐘走勢的市場時區不符。")
     try:
         tz = ZoneInfo(tz_name)
     except (ZoneInfoNotFoundError, TypeError):
-        raise ValueError("五分鐘行情欠缺可核對的市場時區。")
+        raise ValueError("五分鐘走勢欠缺可核對的市場時區。")
     periods = regular_periods(meta.get("tradingPeriods"), tz)
     quote = result["indicators"]["quote"][0]
     fields = ("open", "high", "low", "close")
     if not all(isinstance(quote.get(k), list) for k in fields):
-        raise ValueError("五分鐘行情缺少開高低收欄位。")
+        raise ValueError("五分鐘走勢缺少開高低收欄位。")
     wanted = {}
     for date in dates:
         expected = expected_slots(date, tz, meta.get("instrumentType"), periods.get(date))
@@ -207,7 +207,7 @@ def attach(watch, data, symbol):
         if data.get("intraday_explicit"):
             raise ValueError("指定的五分鐘檔案無法使用。" + str(error)) from error
         sessions = {}
-        data["warnings"].append("五分鐘行情未能核實。" + str(error))
+        data["warnings"].append("五分鐘走勢未能核實。" + str(error))
     latest = watch["latest_session"]
     records = events + ([latest] if latest and not latest["complete"] else [])
     for event in records:

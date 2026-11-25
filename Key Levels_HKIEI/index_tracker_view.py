@@ -3,10 +3,10 @@ import hashlib
 import html
 
 SIDE = {"support": "支持位", "resistance": "阻力位", "range": "待確認區間"}
-STATE = {"none": "暫無有效價位", "insufficient": "行情不足，暫無法判定",
-         "partial": "暫無有效價位，部分所需行情不足", "tracking": "追蹤中"}
-QUALITY = {"ok": "已核對收燭", "partial": "最新交易日只納入已完成燭", "missing": "未取得可用行情",
-           "gap": "最新時段有缺口", "stale": "五分鐘行情未涵蓋最新交易日"}
+STATE = {"none": "暫無有效價位", "insufficient": "走勢不足，暫無法判定",
+         "partial": "暫無有效價位，部分所需走勢不足", "tracking": "追蹤中"}
+QUALITY = {"ok": "已核對收燭", "partial": "最新交易日只納入已完成燭", "missing": "未取得可用走勢",
+           "gap": "最新時段有缺口", "stale": "五分鐘走勢未涵蓋最新交易日"}
 STATUS = {
     "platform": "整固中，等候收市突破", "breakout": "已收市突破，等候首次回試",
     "watch_sweep": "曾多次觸及，留意有否穿位", "first_retest": "已首次回試",
@@ -18,7 +18,7 @@ STATUS = {
     "held_from_above": "由上方回試後回升", "rejected_from_below": "由下方回試後回落",
     "ema_test": "已回試當時的參考價位", "lifeline_inactive": "這個參考價位已停止追蹤",
     "trend_ended": "原有趨勢已結束", "expired": "已過觀察期", "session_ended": "即市觀察時段已結束",
-    "data_gap": "行情中斷，停止追蹤"
+    "data_gap": "走勢中斷，停止追蹤"
 }
 ROLE = {"box_low": "區間低位", "box_high": "區間高位", "low": "最低價", "high": "最高價",
         "held_above": "從上方回試後回升", "rejected_below": "從下方回試後回落",
@@ -239,7 +239,7 @@ def section(report):
         if frame["latest_retests"]:
             out.append('<p>' + esc(latest_text(frame)) + '</p>')
         if frame["coverage"].get("gaps"):
-            out.append('<p>行情有缺口的交易日　' + esc('、'.join(frame["coverage"]["gaps"])) + '</p>')
+            out.append('<p>走勢有缺口的交易日　' + esc('、'.join(frame["coverage"]["gaps"])) + '</p>')
         for side, group in frame["levels"].items():
             rows, recent = group["active"], group["recent"]
             if side == "range" and not (rows or recent):
@@ -259,9 +259,9 @@ def dashboard(reports):
            '<nav>'+''.join(f'<a href="#i{i}">{esc(r["name"])}</a>' for i, r in enumerate(reports))+'</nav>']
     for i, r in enumerate(reports):
         if r.get("error"):
-            body = '<h2>'+esc(r["name"])+'</h2><p>行情無法核對　'+esc(r["error"])+'</p>'
+            body = '<h2>'+esc(r["name"])+'</h2><p>走勢無法核對　'+esc(r["error"])+'</p>'
         else:
-            source = "合成測試行情" if r["synthetic"] else "已保存行情，離線重播" if r.get(
+            source = "合成測試走勢" if r["synthetic"] else "已保存走勢，離線重播" if r.get(
                 "offline") else "Yahoo Finance，報價可能延遲"
             body = '<p>'+esc(source)+'　'+esc(r["symbol"])+'</p>'+section(r)
         out.append(f'<article id="i{i}">'+body+'</article>')

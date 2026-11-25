@@ -78,7 +78,7 @@ def weekly_profile(data, symbol, week_of=None, quote_snapshot=None):
 
 def dates(report):
     yield f"觀察週期　{report['week_start']} 至 {report['week_end']}（當地交易時段）"
-    yield f"行情截至　{report['data_through']} 收市　{price(report['reference_price'])} 點"
+    yield f"走勢截至　{report['data_through']} 收市　{price(report['reference_price'])} 點"
     spot = report.get("chart", {}).get("quote", {})
     if spot.get("kind") == "intraday":
         stamp = dt.datetime.fromisoformat(spot["at"])
@@ -89,7 +89,7 @@ def dates(report):
     elif report["effective_from"]:
         yield f"本次更新適用　{report['effective_from']} 至 {report['week_end']} 的開市時段"
     elif report["data_through"] < report["week_start"]:
-        yield "行情未涵蓋目標週的收市，以下只反映上述資料日期。"
+        yield "走勢未涵蓋目標週的收市，以下只反映上述資料日期。"
     else:
         yield "本週已結束，以下記錄截至該週最後可核對的收市。"
     if report["opening_cutoff"]:
@@ -294,7 +294,7 @@ def weekly_article(report, multiple, brand=""):
     article_id = "market-" + code.lower()
     title = f'<{title_tag} class="market-title">{name}本週關鍵位</{title_tag}>'
     if report.get("error"):
-        return (f'<article id="{article_id}"><header class="mast">{title}{brand}</header><p class="notice">行情無法核對　'
+        return (f'<article id="{article_id}"><header class="mast">{title}{brand}</header><p class="notice">走勢無法核對　'
                 f'{esc(report["error"])}</p></article>')
     year = dt.date.fromisoformat(report["week_start"]).year
     week = period_label(report["week_start"], report["week_end"])
@@ -303,7 +303,7 @@ def weekly_article(report, multiple, brand=""):
     if status == "本版適用" and market.endswith("時間"):
         market = market.removesuffix("時間") + "交易時段"
     as_of = public_date(report["data_through"], year)
-    quote_label = "收市（合成測試行情）" if report["synthetic"] else "收市快照" if report.get("offline") else "收市"
+    quote_label = "收市（合成測試走勢）" if report["synthetic"] else "收市快照" if report.get("offline") else "收市"
     head_date, head_value, basis = as_of, report["reference_price"], ""
     spot = report.get("chart", {}).get("quote", {})
     if spot.get("kind") == "intraday":
@@ -341,17 +341,17 @@ def weekly_article(report, multiple, brand=""):
         if levels[group]:
             out.append(proof(levels[group][0], group, report, year))
     out.append(further_levels(report, year))
-    source = ("合成測試行情" if report["synthetic"] else
+    source = ("合成測試走勢" if report["synthetic"] else
               f'<a href="https://finance.yahoo.com/quote/%5E{code}/history/">Yahoo Finance 現貨指數天線</a>')
     if report.get("offline") and not report["synthetic"]:
-        source += "，按已保存的收市行情整理"
+        source += "，按已保存的收市走勢整理"
     prior = ""
     if report["opening_cutoff"]:
         label = "提前預覽依據" if report["opening_provisional"] else "周初依據"
         prior = f'<p>{label}　{public_date(report["opening_cutoff"], year)}收市</p>'
     out.append('<details class="method"><summary>資料日期與選位方法</summary><div>'
                f'{prior}<p>選位周期　天線，每支代表一個交易日。價區按每次收市更新。</p>'
-               f'<p>行情來源　{source}</p></div></details></article>')
+               f'<p>走勢來源　{source}</p></div></details></article>')
     return ''.join(out)
 
 

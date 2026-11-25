@@ -22,7 +22,6 @@ import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-VERSION = "2.2.3"
 DISCLAIMER = "僅供教育參考，並非投資建議。數據可能有延遲。"
 AI_NOTICE = ("本圖像及當中重要價位由 A.I. 根據 Yahoo Finance 公開數據自動計算及生成，"
              "未經人工逐一核實，或有錯誤或延遲。")
@@ -82,7 +81,7 @@ def fetch_chart(symbol, range_name="1y", timeout=20, *, period=None):
             if error.code in (429, 500, 502, 503, 504) and attempt < 2:
                 time.sleep(attempt + 1)
                 continue
-            raise ValueError("Yahoo HTTP %s，未能取得行情，請稍後再試。" % error.code)
+            raise ValueError("Yahoo HTTP %s，未能取得走勢，請稍後再試。" % error.code)
         except (urllib.error.URLError, TimeoutError, OSError) as error:
             if attempt < 2:
                 time.sleep(attempt + 1)
@@ -108,13 +107,13 @@ def parse_chart(payload, now=None):
         raise ValueError("Yahoo API 錯誤：%s" % chart["error"].get("description", chart["error"]))
     results = chart.get("result")
     if not results:
-        raise ValueError("Yahoo 沒有回傳行情。")
+        raise ValueError("Yahoo 沒有回傳走勢。")
     result = results[0]
     meta = result.get("meta", {})
     tz = market_timezone(meta, warnings)
     quotes = result.get("indicators", {}).get("quote", [])
     if not quotes:
-        raise ValueError("行情缺少開市、最高、最低及收市價資料。")
+        raise ValueError("走勢缺少開市、最高、最低及收市價資料。")
     quote = quotes[0]
     bars_by_date = {}
     bad = 0
@@ -179,7 +178,7 @@ def parse_chart(payload, now=None):
         warnings.append("Yahoo 報價時間較本機時鐘遲約 %d 分鐘，請檢查電腦時間設定。" % round((stamp - now) / 60))
     age_hours = max(0, now - stamp) / 3600
     if age_hours > 96:
-        warnings.append("報價已超過 96 小時，可能因假期、停牌或資料過舊，不宜視為即時行情。")
+        warnings.append("報價已超過 96 小時，可能因假期、停牌或資料過舊，不宜視為即時走勢。")
     ref_date = dt.datetime.fromtimestamp(stamp, tz).date().isoformat()
     previous = [b for b in completed if b["date"] < ref_date]
     previous = previous[-1] if previous else None
@@ -524,7 +523,7 @@ def calculate_levels(data, symbol, args):
     warnings.append("「過往反應次數」以現時價位回看過去計算；移動平均線位置亦以今日數值回看計算，並非該線過往實際被觸及的次數。")
     dense = bool(supports and resistances and atr
                  and resistances[-1]["center"] - supports[-1]["center"] < 3 * atr)
-    return {"schema_version": VERSION, "symbol": symbol,
+    return {"symbol": symbol,
             "instrument_name": data["meta"].get("shortName", symbol),
             "currency": data["meta"].get("currency", "unknown"),
             "unit": "index points" if symbol.startswith("^") else data["meta"].get("currency", "unknown"),
@@ -726,9 +725,9 @@ def text_report(report):
     out = []
     source = r.get("data_source", {})
     if source.get("synthetic"):
-        out.append("⚠️ 合成測試數據，非真實行情，不可作市況分析。")
+        out.append("⚠️ 合成測試數據，非真實走勢，不可作市況分析。")
     elif source.get("input_file"):
-        out.append("⚠️ 離線重播已保存數據，並非即時行情。")
+        out.append("⚠️ 離線重播已保存數據，並非即時走勢。")
     price_note = ("Yahoo 報價，可能有延遲，不包括盤前及盤後交易" if "regularMarketPrice" in p["kind"]
                   else "採用最新交易日收市價，並非即時價")
     out += ["📍 %s（%s）日線支持位及阻力位" % (r["symbol"], r["instrument_name"]),
@@ -763,7 +762,7 @@ def text_report(report):
         if hsi:
             from hsi_reactions import metric_rows
             out.append("恒指專項 · 首觸後一小時的方向及幅度")
-            out.append("下列為 v1.5 舊版選位及上日樞軸的歷史對照。")
+            out.append("下列為先前選位及上日樞軸的歷史對照。")
             for row in metric_rows(hsi["stats"], split=True):
                 out.append("- %s · 先順向 %s · 先逆向 %d · 兩邊未到 %d · 同燭先後不明 %d · 最大順向幅度中位數 %s" % row)
             out.append("順向幅度由觸及後下一支五分鐘燭的開市價計至其後一小時最遠點。")
@@ -778,7 +777,7 @@ def text_report(report):
         hourly = watch.get("hourly")
         if hourly:
             out.append("首次觸及後一小時，以其後下一支五分鐘燭的開市價起計，看哪個方向先行半個上日 ATR。")
-            out.append("完整五分鐘行情 %d／%d 日。兩邊未到及同燭先後不明均計入分母。" %
+            out.append("完整五分鐘走勢 %d／%d 日。兩邊未到及同燭先後不明均計入分母。" %
                        (hourly["full_sessions"], hourly["requested_sessions"]))
             for layer, label in LAYERS:
                 out.append("%s · 可評 %d 次 · 先順向 %s · 先逆向 %d 次 · 兩邊未到 %d 次 · 先後不明 %d 次" %
@@ -804,7 +803,7 @@ def text_report(report):
                            (label, direction, count["touches"], ratio(count["returned"], count["touches"]),
                             ratio(count["moved_half"], count["atr_touches"])))
         if watch["scored_days"] < watch["requested_days"]:
-            out.append("部分日期欠缺 250 個已收市交易日的事前行情。只按可重建日期列示結果。")
+            out.append("部分日期欠缺 250 個已收市交易日的事前走勢。只按可重建日期列示結果。")
     for heading, key in (("⬆️ 最近阻力位（股價上升時可能受阻的位置）", "nearest_resistances"),
                          ("⬇️ 最近支持位（股價下跌時可能獲承接的位置）", "nearest_supports")):
         out.extend(["", heading, "| | 價位區間 | 距離現價 | 過往反應次數 | 過往觸及次數 | 形成原因 |", "|---|---:|---:|---:|---:|---|"])
@@ -872,12 +871,12 @@ def render_svg(report, bars, size, days):
     def line(x1,y1,x2,y2,color,width_=1,dash=""):
         elements.append('<line x1="%.2f" y1="%.2f" x2="%.2f" y2="%.2f" stroke="%s" stroke-width="%s"%s/>' %
                         (x1,y1,x2,y2,color,width_, (' stroke-dasharray="'+dash+'"') if dash else ""))
-    text(left,85 if portrait else 62,report["symbol"]+"  |  KEY LEVELS",46 if portrait else 40,weight="700")
+    text(left,85 if portrait else 62,report["symbol"]+"  |  Key Levels_HKIEI",46 if portrait else 40,weight="700")
     text(left,138 if portrait else 108,"日線 · 現價 %s %s" % (fmt(price),display_unit(report)),30)
     text(left,183 if portrait else 147,report["reference_price"].get("time_display", report["reference_price"]["time"]),24, "#aabbcf")
     source = report.get("data_source", {})
-    banner = ("合成測試數據 · 非真實行情" if source.get("synthetic") else
-              "OFFLINE SNAPSHOT · 非即時行情" if source.get("input_file") else
+    banner = ("合成測試數據 · 非真實走勢" if source.get("synthetic") else
+              "OFFLINE SNAPSHOT · 非即時走勢" if source.get("input_file") else
               "觀察參考位置 · 並非買賣訊號")
     text(left,224 if portrait else 180,banner,24,"#e7c36d")
     for i in range(6):
@@ -1069,8 +1068,8 @@ def render_card(report, bars, days=40):
     rect(W-M-bw, 192, bw, 38, c["cyan_soft"], 19, stroke=c["cyan"])
     text(W-M-bw/2, 218, badge, 20, c["indigo"], "700", "middle")
     source = report.get("data_source", {})
-    banner = ("合成測試數據 · 非真實行情" if source.get("synthetic") else
-              "離線重播 · 非即時行情" if source.get("input_file") else None)
+    banner = ("合成測試數據 · 非真實走勢" if source.get("synthetic") else
+              "離線重播 · 非即時走勢" if source.get("input_file") else None)
     if banner:
         text(W-M, 290, banner, 20, c["down"], "700", "end")
 
@@ -1211,7 +1210,7 @@ def render_card(report, bars, days=40):
 
     head = ('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
             'width="%d" height="%d" viewBox="0 0 %d %d" role="img">' % (W, H, W, H))
-    return "\n".join([head, '<title>%s key levels report card</title>' % esc(report["symbol"]),
+    return "\n".join([head, '<title>%s Key Levels_HKIEI report card</title>' % esc(report["symbol"]),
                       '<g font-family="%s">' % CARD_FONT] + els + ["</g>", "</svg>"])
 
 
@@ -1256,8 +1255,8 @@ def parser():
     html_output.add_argument("--html", type=Path, help="HTML 報告位置；預設與 SVG 同名，副檔名 .html")
     html_output.add_argument("--no-html", action="store_true", help="略過預設 HTML 報告（供批次處理）")
     p.add_argument("--json", nargs="?", const="-", metavar="PATH", help="輸出 JSON 至 stdout，或寫入 PATH")
-    p.add_argument("--input-json", type=Path, help="離線重播已保存的 Yahoo 原始 JSON（並非最新行情）")
-    p.add_argument("--intraday-json", type=Path, help="使用同一代號及市場時區的 Yahoo 五分鐘原始行情")
+    p.add_argument("--input-json", type=Path, help="離線重播已保存的 Yahoo 原始 JSON（並非最新走勢）")
+    p.add_argument("--intraday-json", type=Path, help="使用同一代號及市場時區的 Yahoo 五分鐘原始走勢")
     p.add_argument("--save-raw", type=Path, help="保存最後使用的原始 Yahoo JSON 供重現")
     p.add_argument("--overwrite", action="store_true", help="明示允許覆寫已存在的輸出檔")
     p.add_argument("--ma", choices=["ema","sma"], default="ema")
@@ -1344,7 +1343,7 @@ def add_earlier_history(data, extra, symbol):
             prior = [b for b in data["completed"] if b["date"] < data["price"]["date"]]
             data["previous"] = prior[-1] if prior else None
         if added:
-            data["warnings"].append("一年行情不足 250 日，現價圖使用最多兩年的已收市行情。")
+            data["warnings"].append("一年走勢不足 250 日，現價圖使用最多兩年的已收市走勢。")
 
 
 def load_market_data(symbol, args, tracking=False, with_intraday=True):
@@ -1373,9 +1372,9 @@ def load_market_data(symbol, args, tracking=False, with_intraday=True):
             if args.save_raw:
                 payload = dict(payload, keyLevelsEarlierChart=extended)
         except ValueError as error:
-            data["warnings"].append("未能補充較早行情，已使用可核對的日期。" + str(error))
+            data["warnings"].append("未能補充較早走勢，已使用可核對的日期。" + str(error))
     if args.input_json:
-        data["warnings"].append("離線重播：行情來自已保存的檔案，不代表最新市況。")
+        data["warnings"].append("離線重播：走勢來自已保存的檔案，不代表最新市況。")
     if not with_intraday:
         return data, payload, captured, urls
     intraday = payload.get("keyLevelsIntradayChart")
@@ -1396,7 +1395,7 @@ def load_market_data(symbol, args, tracking=False, with_intraday=True):
                                             period=(max(earliest, int(first["timestamp"]) - 86400), stop))
                 urls.append(url)
             except ValueError as error:
-                data["warnings"].append("未能取得五分鐘行情。" + str(error))
+                data["warnings"].append("未能取得五分鐘走勢。" + str(error))
     if intraday is not None:
         data["intraday_chart"] = intraday
         if args.save_raw:
@@ -1480,7 +1479,7 @@ def main(argv=None):
                 print("報告卡: "+r["card_path"])
         return 0
     except (ValueError, TypeError, KeyError, IndexError, AttributeError, OSError) as error:
-        print("key-levels: "+str(error),file=sys.stderr)
+        print("Key Levels_HKIEI: "+str(error),file=sys.stderr)
         return 2
 
 

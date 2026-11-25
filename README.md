@@ -1,6 +1,6 @@
 # Key Levels_HKIEI｜支持位・阻力位分析
 
-**投創教育 HKIEI 製作 · v2.2.3**
+**投創教育 HKIEI 製作**
 
 睇市前，先整理值得留意的價位。
 
@@ -34,7 +34,7 @@
 
 ## 2. 適用市場
 
-**本版本的主要使用範圍是以下四個現貨指數：**
+**本 Skill 的主要使用範圍是以下四個現貨指數：**
 
 | 市場 | 可直接輸入的名稱 | 實際分析對象 |
 | --- | --- | --- |
@@ -100,7 +100,7 @@
 1. 在 ChatGPT 側邊欄開啟 **Plugins（外掛）**，再選 **Skills**。
 2. 選 **Create → Upload from your computer**。
 3. 選取下載的 `Key Levels_HKIEI.zip`，按畫面指示完成掃描及安裝；不要只上載 `SKILL.md`。
-4. 確認 Skills 清單出現 `key-levels`，再開新對話測試。
+4. 確認 Skills 清單出現 **Key Levels_HKIEI**，再開新對話測試。部分介面會顯示技術識別 `key-levels`。
 
 介面及上載權限以帳戶實際提供的功能為準；沒有 Skills 或上載選項時，請查閱 [ChatGPT 官方 Skills 說明](https://help.openai.com/en/articles/20001066-skills-in-chatgpt)。把 ZIP 放入一般對話作附件，不等於已永久安裝 Skill。
 
@@ -110,30 +110,30 @@
 
 以下步驟適用於 **Mac 上的 Claude Code**，不是把檔案貼入一般 Claude 對話。
 
-1. 雙擊 ZIP 解壓，取得完整的 `key-levels` 資料夾。
+1. 雙擊 ZIP 解壓，取得完整的 `Key Levels_HKIEI` 資料夾。
 2. 將資料夾放在 Mac 的「下載」資料夾；如放在其他位置，請在下方指令改成實際位置。
 3. 開啟 Claude Code，貼上以下指令：
 
 ```text
-請安裝「下載」資料夾內的 key-levels Skill。
+請安裝「下載」資料夾內的 Key Levels_HKIEI Skill。
 先確認目前能讀取本機檔案、執行 Python 3.9 或以上版本，並連線取得走勢。
-將完整 key-levels 資料夾安裝到 ~/.claude/skills/key-levels/。
+將完整 Key Levels_HKIEI 資料夾安裝到 ~/.claude/skills/key-levels/。
 確認 SKILL.md、track_indices.py 及 assets 資料夾均存在。
 若已有舊版本，先備份再更新；請保留所有程式及素材，不要改動分析邏輯。
 完成後告訴我安裝路徑及 Python 版本。
 ```
 
 4. 如出現檔案讀寫或執行許可，核對內容後按平台提示處理。
-5. 安裝完成後開啟新對話，輸入 `/key-levels`，再提出分析要求。
+5. 安裝完成後開啟新對話，輸入「請使用 Key Levels_HKIEI 分析恒指支持阻力」。如要用斜線指令，可輸入 `/key-levels`。
 
 如果 Mac 尚未有合適的 Python，可從 [Python 官方 macOS 下載頁](https://www.python.org/downloads/macos/) 安裝。安裝後在 Mac「終端機」輸入 `python3 --version`，應看到 3.9 或以上版本。若 Mac 提示安裝「指令列開發者工具」，請按提示完成後再試。
 
 <details>
 <summary>想自行放入資料夾？展開查看 Finder 方法</summary>
 
-在 Finder 按 `Command + Shift + G`，輸入 `~/.claude/`，再開啟或建立 `skills` 資料夾，把完整的 `key-levels` 資料夾放進去。若尚未有 `.claude` 資料夾，請先使用上方 Claude 安裝指令。
+在 Finder 按 `Command + Shift + G`，輸入 `~/.claude/`，再開啟或建立 `skills` 資料夾，把完整的 `Key Levels_HKIEI` 資料夾放進去。若尚未有 `.claude` 資料夾，請先使用上方 Claude 安裝指令。
 
-正確位置應為 `~/.claude/skills/key-levels/SKILL.md`；不要多放一層，變成 `key-levels/key-levels/SKILL.md`。
+安裝時將解壓所得的 `Key Levels_HKIEI` 資料夾，以 `key-levels` 作技術識別放入 `~/.claude/skills/`。正確位置應為 `~/.claude/skills/key-levels/SKILL.md`，不要多套一層資料夾。對外名稱仍為 **Key Levels_HKIEI**。
 
 此為 Claude 的個人 Skill 路徑，詳見 [Claude 官方 Skills 說明](https://code.claude.com/docs/en/skills)。
 
@@ -204,7 +204,7 @@
 - **週期及時區：** 日線與五分鐘圖的用途不同；港股與美股亦有時差，請連同報告時區閱讀事件時間。
 - **更新方式：** 每次執行才取得當時可用資料；本套件本身不提供全天候監察、即時推送或自動落盤。
 - **價位判讀：** 支持及阻力是觀察區，並非保證反彈或回落的位置。沒有符合條件的價區時，報告會如實說明。
-- **檔案完整性：** 請保留整個 `key-levels` 資料夾及 `assets`，不要只保留 `SKILL.md` 或刪除個別程式。
+- **檔案完整性：** 請保留整個 `Key Levels_HKIEI` 資料夾及 `assets`，不要只保留 `SKILL.md` 或刪除個別程式。
 - **平台費用：** 使用 ChatGPT、Claude 或其他服務所需的帳戶資格、訂閱及用量費用，按各平台規定處理。
 
 **Windows 使用說明：** 本 Skill 尚未經 Windows 實機測試，現階段暫不推薦 Windows 用戶下載及使用。如仍希望自行嘗試，請先評估裝置相容性並備份相關資料。團隊暫不保證 Windows 環境下的功能完整性或運作穩定性，亦未能提供相應技術支援；因自行安裝或使用而產生的問題，須由使用者自行評估及處理。
@@ -262,7 +262,7 @@
 <details>
 <summary><strong>為甚麼 ZIP 內有這麼多檔案？可以只留 SKILL.md 嗎？</strong></summary>
 
-安裝包共有 21 個檔案：2 份指引、12 個 Python 程式及 7 個報告素材。它們分別處理走勢、價位、追蹤紀錄及報告外觀，互有依賴。請保留完整資料夾；只留下 `SKILL.md` 會缺少實際執行所需的程式與素材。
+安裝包共有 22 個檔案：2 份指引、12 個 Python 程式、7 個報告素材及 1 份顯示名稱設定。它們分別處理走勢、價位、追蹤紀錄及報告外觀，互有依賴。請保留完整資料夾；只留下 `SKILL.md` 會缺少實際執行所需的程式與素材。
 
 </details>
 
@@ -303,7 +303,7 @@ README 就是安裝及使用說明。你現在看到的 GitHub 首頁會自動�
 
 ---
 
-版本：**v2.2.3** · 本頁說明更新：**2026 年 11 月 25 日**
+本頁說明更新：**2026 年 11 月 25 日**
 
 平台介面及功能可能調整，安裝入口請以 [ChatGPT 官方說明](https://help.openai.com/en/articles/20001066-skills-in-chatgpt) 及 [Claude 官方說明](https://code.claude.com/docs/en/skills) 為準。
 

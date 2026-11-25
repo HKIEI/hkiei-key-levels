@@ -12,7 +12,7 @@ from pathlib import Path
 from index_tracker import INDICES, track_index
 from index_tracker_view import dashboard, public_tracker, text_lines
 from index_week import weekly_dashboard, weekly_profile, weekly_text
-from key_levels import VERSION, load_market_data, normalize_symbol
+from key_levels import load_market_data, normalize_symbol
 
 
 def selected(values):
@@ -70,7 +70,7 @@ def main(argv=None):
     parser.add_argument("--week-of", type=dt.date.fromisoformat, metavar="YYYY-MM-DD",
                         help="編製指定日期所屬週的關鍵位報告，以該市場日期為準")
     parser.add_argument("--input-json", action="append", default=[],
-                        metavar="SYMBOL=PATH", help="天線或包含五分鐘行情的快照，可重複指定")
+                        metavar="SYMBOL=PATH", help="天線或包含五分鐘走勢的快照，可重複指定")
     parser.add_argument("--intraday-json", action="append", default=[],
                         metavar="SYMBOL=PATH", help="配對的五分鐘快照，可重複指定")
     parser.add_argument("--history-days", type=int, default=30, help="保留最近幾個交易日已結束追蹤的價位（預設 30）")
@@ -122,7 +122,7 @@ def main(argv=None):
             except (ValueError, OSError, KeyError, TypeError, IndexError) as error:
                 reports.append(dict(symbol=code, name=INDICES[code], error=str(error)))
         failed = [r for r in reports if r.get("error")]
-        output = dict(version=VERSION, indices=reports)
+        output = dict(indices=reports)
         encoded = json.dumps(output, ensure_ascii=False, indent=2, allow_nan=False) if args.json else None
         if hpath:
             save(hpath, weekly_dashboard(reports) if weekly else dashboard(reports), args.overwrite)
@@ -136,15 +136,15 @@ def main(argv=None):
                     print(r["name"]+"　"+r["error"], file=sys.stderr)
                 else:
                     if r["synthetic"]:
-                        print("合成測試行情。")
+                        print("合成測試走勢。")
                     elif r["offline"]:
-                        print("已保存行情，離線重播。")
+                        print("已保存走勢，離線重播。")
                     print("\n".join(weekly_text(r) if weekly else text_lines(r)))
             if hpath:
                 print("\nHTML "+str(hpath.resolve()))
         return 0 if not failed else 1 if len(failed) < len(reports) else 2
     except (ValueError, OSError, TypeError) as error:
-        print("key-levels: "+str(error), file=sys.stderr)
+        print("Key Levels_HKIEI: "+str(error), file=sys.stderr)
         return 2
 
 
