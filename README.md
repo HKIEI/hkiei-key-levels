@@ -8,7 +8,7 @@
 
 你可以用它準備睇市功課、比較現價與關鍵位的距離，以及跟進價格到位後的變化。安裝後，用中文提出要求即可，毋須每次自行輸入程式指令。
 
-**[下載 Key Levels_HKIEI v2.2.3](downloads/key-levels-v2.2.3.zip?raw=true)**
+**[下載 Key Levels_HKIEI](downloads/Key%20Levels_HKIEI.zip?raw=true)**
 
 > 第一次使用：確認裝置及 AI 平台 → 下載及安裝 → 輸入分析要求 → 開啟報告。下載 ZIP 並不等於已完成安裝。
 
@@ -85,7 +85,7 @@
 
 ### 第一步：下載正確檔案
 
-1. 按 **[下載 Key Levels_HKIEI v2.2.3](downloads/key-levels-v2.2.3.zip?raw=true)**，儲存 `key-levels-v2.2.3.zip`。
+1. 按 **[下載 Key Levels_HKIEI](downloads/Key%20Levels_HKIEI.zip?raw=true)**，儲存 `Key Levels_HKIEI.zip`。
 2. 按你使用的平台，跟隨下面 A 或 B 的安裝方式。
 3. 如遇到 404 或無法下載，先確認已登入有權限存取本儲存庫的 GitHub 帳戶。
 
@@ -99,7 +99,7 @@
 
 1. 在 ChatGPT 側邊欄開啟 **Plugins（外掛）**，再選 **Skills**。
 2. 選 **Create → Upload from your computer**。
-3. 選取下載的 `key-levels-v2.2.3.zip`，按畫面指示完成掃描及安裝；不要只上載 `SKILL.md`。
+3. 選取下載的 `Key Levels_HKIEI.zip`，按畫面指示完成掃描及安裝；不要只上載 `SKILL.md`。
 4. 確認 Skills 清單出現 `key-levels`，再開新對話測試。
 
 介面及上載權限以帳戶實際提供的功能為準；沒有 Skills 或上載選項時，請查閱 [ChatGPT 官方 Skills 說明](https://help.openai.com/en/articles/20001066-skills-in-chatgpt)。把 ZIP 放入一般對話作附件，不等於已永久安裝 Skill。

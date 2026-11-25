@@ -16,7 +16,7 @@ ChatGPT
 使用已安裝的「Key Levels_HKIEI」。這個 ZIP 不會自行替帳戶安裝插件。
 
 Claude 安裝
-1. 解壓 key-levels-v2.2.3.zip，保留整個 key-levels 資料夾。
+1. 解壓 Key Levels_HKIEI.zip，保留整個 key-levels 資料夾。
 2. 在可讀取本機檔案的 Claude 環境輸入：
    請把「下載」資料夾內的 key-levels 資料夾安裝到 ~/.claude/skills/key-levels/，並確認 SKILL.md、track_indices.py 及 assets 資料夾均存在。
 3. 完成後開啟新對話，輸入以下使用例子。
