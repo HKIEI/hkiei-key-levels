@@ -22,7 +22,7 @@ import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-VERSION = "2.2.1"
+VERSION = "2.2.3"
 DISCLAIMER = "僅供教育參考，並非投資建議。數據可能有延遲。"
 AI_NOTICE = ("本圖像及當中重要價位由 A.I. 根據 Yahoo Finance 公開數據自動計算及生成，"
              "未經人工逐一核實，或有錯誤或延遲。")
